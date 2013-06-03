@@ -51,7 +51,9 @@ def create_file_creator(options, file_name):
 		'erlang'    : ErlangFileCreator,
 		'Makefile'  : MakefileFileCreator,
 		'md'        : MarkdownFileCreator,
-		'markdown'  : MarkdownFileCreator
+		'markdown'  : MarkdownFileCreator,
+		'sh'        : BashFileCreator,
+		'bash'      : BashFileCreator
 	}
 
 	header_title = options.header_title if options.header_title else file_name
@@ -176,6 +178,17 @@ class MarkdownFileCreator(FileCreator):
 
 ## Running'''.format(project)
 
+#---------------------------------------------------------------------------
+
+class BashFileCreator(FileCreator):
+	def __int__(self, header_title):
+		super(BashFileCreator, self).__init__(self, header_title)
+
+	def print_hash_bang(self, new_file):
+		print >> new_file, '#!/usr/bin/env bash'
+
+	def print_header(self, new_file):
+		print >> new_file, create_header('#', self.header_title)
 
 #---------------------------------------------------------------------------
 
