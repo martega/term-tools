@@ -53,7 +53,8 @@ def create_file_creator(options, file_name):
 		'md'        : MarkdownFileCreator,
 		'markdown'  : MarkdownFileCreator,
 		'sh'        : BashFileCreator,
-		'bash'      : BashFileCreator
+		'bash'      : BashFileCreator,
+		'html'      : HtmlFileCreator
 	}
 
 	header_title = options.header_title if options.header_title else file_name
@@ -89,7 +90,7 @@ class FileCreator(object):
 #---------------------------------------------------------------------------
 
 class PythonFileCreator(FileCreator):
-	def __int__(self, header_title):
+	def __init__(self, header_title):
 		super(PythonFileCreator, self).__init__(self, header_title)
 
 	def print_header(self, new_file):
@@ -119,7 +120,7 @@ module.exports = {
 #---------------------------------------------------------------------------
 
 class ErlangFileCreator(FileCreator):
-	def __int__(self, header_title):
+	def __init__(self, header_title):
 		super(ErlangFileCreator, self).__init__(self, header_title)
 
 	def print_header(self, new_file):
@@ -135,7 +136,7 @@ class ErlangFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class MakefileFileCreator(FileCreator):
-	def __int__(self, header_title):
+	def __init__(self, header_title):
 		super(MakefileFileCreator, self).__init__(self, header_title)
 
 	def print_header(self, new_file):
@@ -164,7 +165,7 @@ run:
 #---------------------------------------------------------------------------
 
 class MarkdownFileCreator(FileCreator):
-	def __int__(self, header_title):
+	def __init__(self, header_title):
 		super(MakefileFileCreator, self).__init__(self, header_title)
 
 	def print_body(self, new_file):
@@ -181,7 +182,7 @@ class MarkdownFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class BashFileCreator(FileCreator):
-	def __int__(self, header_title):
+	def __init__(self, header_title):
 		super(BashFileCreator, self).__init__(self, header_title)
 
 	def print_hash_bang(self, new_file):
@@ -189,6 +190,37 @@ class BashFileCreator(FileCreator):
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('#', self.header_title)
+
+#---------------------------------------------------------------------------
+
+class HtmlFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(HtmlFileCreator, self).__init__(header_title)
+
+	def print_body(self, new_file):
+		print >> new_file, '''<!DOCTYPE html>
+<html>
+
+<head>
+	<title><!-- TODO --></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<!-- <script src="" type="text/javascrip"></script> -->
+</head>
+
+<body>
+	<h1>Hello, World!</h1>
+
+	<h2>Section 1</h2>
+
+	<h2>Section 2</h2>
+
+	<h2>Section 3</h2>
+</body>
+
+</html>
+'''
+
 
 #---------------------------------------------------------------------------
 
