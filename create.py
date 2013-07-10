@@ -203,20 +203,25 @@ class HtmlFileCreator(FileCreator):
 <html>
 
 <head>
-	<title><!-- TODO --></title>
+	<title></title>
+
+	<!-- stylesheets -->
 	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<!-- jQuery -->
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<!-- <script src="" type="text/javascrip"></script> -->
+
+	<!-- javascript -->
+
+	<!-- start script -->
+	<script>
+		$(document).ready(function () {
+			alert('You still need to implement the start script!');
+		});
+	</script>
 </head>
 
 <body>
-	<h1>Hello, World!</h1>
-
-	<h2>Section 1</h2>
-
-	<h2>Section 2</h2>
-
-	<h2>Section 3</h2>
 </body>
 
 </html>
