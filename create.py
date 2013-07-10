@@ -54,7 +54,8 @@ def create_file_creator(options, file_name):
 		'markdown'  : MarkdownFileCreator,
 		'sh'        : BashFileCreator,
 		'bash'      : BashFileCreator,
-		'html'      : HtmlFileCreator
+		'html'      : HtmlFileCreator,
+		'css'       : CssFileCreator
 	}
 
 	header_title = options.header_title if options.header_title else file_name
@@ -221,6 +222,53 @@ class HtmlFileCreator(FileCreator):
 </html>
 '''
 
+#---------------------------------------------------------------------------
+
+class CssFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(CssFileCreator, self).__init__(header_title)
+
+	def print_header(self, new_file):
+		print >> new_file, '''/*
+* {0}
+*/
+'''.format(self.header_title)
+
+	def print_body(self, new_file):
+		print >> new_file, '''
+* {
+	margin  : 0;
+	padding : 0;
+	box-sizing      : border-box;
+	-moz-box-sizing : border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	margin-bottom: 10px;
+}
+
+ol, ul, dl {
+	list-style-position: inside;
+}
+
+body {
+	font  : 13px 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
+	color : #444;
+	background-color : #888;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:link, a:visited {
+	color: inherit;
+}
+
+strong {
+	font-weight : 800;
+	color       : #000;
+}'''
 
 #---------------------------------------------------------------------------
 
