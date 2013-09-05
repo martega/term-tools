@@ -55,7 +55,8 @@ def create_file_creator(options, file_name):
 		'sh'        : BashFileCreator,
 		'bash'      : BashFileCreator,
 		'html'      : HtmlFileCreator,
-		'css'       : CssFileCreator
+		'css'       : CssFileCreator,
+		'c'         : CFileCreator
 	}
 
 	header_title = options.header_title if options.header_title else file_name
@@ -273,6 +274,29 @@ a:link, a:visited {
 strong {
 	font-weight : 800;
 	color       : #000;
+}'''
+
+#---------------------------------------------------------------------------
+
+class CFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(CFileCreator, self).__init__(header_title)
+
+	def print_header(self, new_file):
+		header_title = self.header_title
+		if new_file.name == 'main.c':
+			project = os.getcwd().split('/')[-1]
+			header_title = 'main.c for the {0} project'.format(project)
+		print >> new_file, create_header('//', header_title)
+
+	def print_body(self, new_file):
+		if new_file.name == 'main.c':
+			print >> new_file, '''
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
 }'''
 
 #---------------------------------------------------------------------------
