@@ -93,7 +93,7 @@ class FileCreator(object):
 
 class PythonFileCreator(FileCreator):
 	def __init__(self, header_title):
-		super(PythonFileCreator, self).__init__(self, header_title)
+		super(PythonFileCreator, self).__init__(header_title)
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('#', self.header_title)
@@ -101,8 +101,8 @@ class PythonFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class JavascriptFileCreator(FileCreator):
-	def __int__(self, header_title):
-		super(JavascriptFileCreator, self).__init__(self, header_title)
+	def __init__(self, header_title):
+		super(JavascriptFileCreator, self).__init__(header_title)
 
 	def print_header(self, new_file):
 		header_title = self.header_title
@@ -123,7 +123,7 @@ module.exports = {
 
 class ErlangFileCreator(FileCreator):
 	def __init__(self, header_title):
-		super(ErlangFileCreator, self).__init__(self, header_title)
+		super(ErlangFileCreator, self).__init__(header_title)
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('%', self.header_title)
@@ -139,7 +139,7 @@ class ErlangFileCreator(FileCreator):
 
 class MakefileFileCreator(FileCreator):
 	def __init__(self, header_title):
-		super(MakefileFileCreator, self).__init__(self, header_title)
+		super(MakefileFileCreator, self).__init__(header_title)
 
 	def print_header(self, new_file):
 		project = os.getcwd().split('/')[-1]
@@ -168,7 +168,7 @@ run:
 
 class MarkdownFileCreator(FileCreator):
 	def __init__(self, header_title):
-		super(MakefileFileCreator, self).__init__(self, header_title)
+		super(MakefileFileCreator, self).__init__(header_title)
 
 	def print_body(self, new_file):
 		project = os.getcwd().split('/')[-1]
@@ -185,7 +185,7 @@ class MarkdownFileCreator(FileCreator):
 
 class BashFileCreator(FileCreator):
 	def __init__(self, header_title):
-		super(BashFileCreator, self).__init__(self, header_title)
+		super(BashFileCreator, self).__init__(header_title)
 
 	def print_hash_bang(self, new_file):
 		print >> new_file, '#!/usr/bin/env bash'
