@@ -56,7 +56,8 @@ def create_file_creator(options, file_name):
 		'bash'      : BashFileCreator,
 		'html'      : HtmlFileCreator,
 		'css'       : CssFileCreator,
-		'c'         : CFileCreator
+		'c'         : CFileCreator,
+		'java'      : JavaFileCreator
 	}
 
 	header_title = options.header_title if options.header_title else file_name
@@ -298,6 +299,27 @@ class CFileCreator(FileCreator):
 int main(int argc, char** argv)
 {
 }'''
+
+#---------------------------------------------------------------------------
+
+class JavaFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(JavaFileCreator, self).__init__(header_title)
+
+	def print_header(self, new_file):
+		header_title = self.header_title
+		print >> new_file, create_header('//', header_title)
+
+	def print_body(self, new_file):
+		class_name = new_file.name.split('.')[0]
+		print >> new_file, '''
+public class {0} {{
+
+	public static void main(String[] args) {{
+		System.out.println("Hello, World!");
+	}}
+
+}}'''.format(class_name)
 
 #---------------------------------------------------------------------------
 
