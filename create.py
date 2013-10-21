@@ -57,7 +57,8 @@ def create_file_creator(options, file_name):
 		'html'      : HtmlFileCreator,
 		'css'       : CssFileCreator,
 		'c'         : CFileCreator,
-		'java'      : JavaFileCreator
+		'java'      : JavaFileCreator,
+		'go'        : GoFileCreator
 	}
 
 	header_title = options.header_title if options.header_title else file_name
@@ -320,6 +321,28 @@ public class {0} {{
 	}}
 
 }}'''.format(class_name)
+
+
+#---------------------------------------------------------------------------
+
+class GoFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(GoFileCreator, self).__init__(header_title)
+
+	def print_header(self, new_file):
+		header_title = self.header_title
+		print >> new_file, create_header('//', header_title)
+
+	def print_body(self, new_file):
+		print >> new_file, '''
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Printf("Hello, World!\\n");
+}
+'''
 
 #---------------------------------------------------------------------------
 
