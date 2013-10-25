@@ -57,6 +57,7 @@ def create_file_creator(options, file_name):
 		'html'      : HtmlFileCreator,
 		'css'       : CssFileCreator,
 		'c'         : CFileCreator,
+		'h'         : HFileCreator,
 		'java'      : JavaFileCreator,
 		'go'        : GoFileCreator
 	}
@@ -300,6 +301,23 @@ class CFileCreator(FileCreator):
 int main(int argc, char** argv)
 {
 }'''
+
+
+#---------------------------------------------------------------------------
+
+class HFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(HFileCreator, self).__init__(header_title)
+
+	def print_header(self, new_file):
+		print >> new_file, create_header('//', self.header_title)
+
+	def print_body(self, new_file):
+		print >> new_file, '''
+#ifndef {0}
+#define {0}
+
+#endif'''.format(new_file.name.upper().replace('.', '_'))
 
 #---------------------------------------------------------------------------
 
