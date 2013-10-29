@@ -45,6 +45,8 @@ def create_file_creator(options, file_name):
 	file_creators = {
 		'py'        : PythonFileCreator,
 		'python'    : PythonFileCreator,
+		'rb'        : RubyFileCreator,
+		'ruby'      : RubyFileCreator,
 		'js'        : JavascriptFileCreator,
 		'javascript': JavascriptFileCreator,
 		'erl'       : ErlangFileCreator,
@@ -100,6 +102,20 @@ class PythonFileCreator(FileCreator):
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('#', self.header_title)
+
+#---------------------------------------------------------------------------
+
+class RubyFileCreator(FileCreator):
+	def __init__(self, header_title):
+		super(RubyFileCreator, self).__init__(header_title)
+
+	def print_header(self, new_file):
+		print >> new_file, create_header('#', self.header_title)
+
+	def print_body(self, new_file):
+		print >> new_file, '''
+puts 'Hello, World!'
+'''
 
 #---------------------------------------------------------------------------
 
