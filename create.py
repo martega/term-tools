@@ -16,11 +16,15 @@ cmdline_parser = optparse.OptionParser(usage=usage,
                                        description=description,
                                        version=version)
 
+cmdline_parser.add_option("--language", action="store", type="string",
+                          dest="language", metavar="LANG",
+                          help="The language of file to create. If this " +
+                               "is not specified the language is guessed " +
+                               "from the file extension.")
+
 cmdline_parser.add_option("--type", action="store", type="string",
                           dest="file_type", metavar="TYPE",
-                          help="The type of file to create. If this " +
-                               "is not specified the type is guessed " +
-                               "from the file extension.")
+                          help="The type of file to create.")
 
 cmdline_parser.add_option("--title", action="store", type="string",
                           dest="header_title", metavar="TITLE",
@@ -64,15 +68,17 @@ def create_file_creator(options, file_name):
 		'go'        : GoFileCreator
 	}
 
-	header_title = options.header_title if options.header_title else file_name
-	file_type = options.file_type if options.file_type else file_extension
-	return file_creators.get(file_type, JavascriptFileCreator)(header_title)
+	if not options.header_title:
+		options.header_title = file_name
+	language = options.language if options.language else file_extension
+	return file_creators.get(language, JavascriptFileCreator)(options)
 
 #---------------------------------------------------------------------------
 
 class FileCreator(object):
-	def __init__(self, header_title):
-		self.header_title = header_title
+	def __init__(self, options):
+		self.options = options
+		self.header_title = options.header_title
 
 	def create_file(self, name):
 		new_file = open(name, 'w+')
@@ -97,8 +103,8 @@ class FileCreator(object):
 #---------------------------------------------------------------------------
 
 class PythonFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(PythonFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(PythonFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('#', self.header_title)
@@ -106,8 +112,8 @@ class PythonFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class RubyFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(RubyFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(RubyFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('#', self.header_title)
@@ -120,8 +126,8 @@ puts 'Hello, World!'
 #---------------------------------------------------------------------------
 
 class JavascriptFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(JavascriptFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(JavascriptFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		header_title = self.header_title
@@ -157,8 +163,8 @@ class ErlangFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class MakefileFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(MakefileFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(MakefileFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		project = os.getcwd().split('/')[-1]
@@ -166,6 +172,15 @@ class MakefileFileCreator(FileCreator):
 		print >> new_file, create_header('#', header_title)
 
 	def print_body(self, new_file):
+		makefile_types = {
+			'js'         : self.print_javascript_body,
+			'javascript' : self.print_javascript_body,
+			'c'          : self.print_c_body
+		}
+
+		makefile_types.get(self.options.file_type, 'js')(new_file)
+
+	def print_javascript_body(self, new_file):
 		print >> new_file, '''
 MOCHA = ./node_modules/mocha/bin/mocha
 
@@ -183,11 +198,41 @@ run:
 
 .PHONY: run test test-md'''
 
+	def print_c_body(self, new_file):
+		print >> new_file, '''
+CC = clang
+TARGETS = foo
+VPATH = src:obj
+
+foo-obj = main.o
+
+run: $(TARGETS)
+	@echo ----------------------------------------------------------------------------
+	@./$<
+
+foo: $(foo-obj)
+	@echo Building executable $@...
+	@cd obj; \\
+	$(CC) $+ -o $@; \\
+	mv $@ ..
+
+%.o: %.c
+	@echo Compiling $<...
+	@mkdir -p obj
+	@$(CC) $< -std=c11 -c
+	@mv $@ obj
+
+clean:
+	rm -rf obj
+	rm $(TARGETS)
+
+.PHONY: run clean'''
+
 #---------------------------------------------------------------------------
 
 class MarkdownFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(MakefileFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(MakefileFileCreator, self).__init__(options)
 
 	def print_body(self, new_file):
 		project = os.getcwd().split('/')[-1]
@@ -203,8 +248,8 @@ class MarkdownFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class BashFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(BashFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(BashFileCreator, self).__init__(options)
 
 	def print_hash_bang(self, new_file):
 		print >> new_file, '#!/usr/bin/env bash'
@@ -215,8 +260,8 @@ class BashFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class HtmlFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(HtmlFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(HtmlFileCreator, self).__init__(options)
 
 	def print_body(self, new_file):
 		print >> new_file, '''<!DOCTYPE html>
@@ -250,8 +295,8 @@ class HtmlFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class CssFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(CssFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(CssFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		print >> new_file, '''/*
@@ -298,8 +343,8 @@ strong {
 #---------------------------------------------------------------------------
 
 class CFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(CFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(CFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		header_title = self.header_title
@@ -322,8 +367,8 @@ int main(int argc, char** argv)
 #---------------------------------------------------------------------------
 
 class HFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(HFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(HFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		print >> new_file, create_header('//', self.header_title)
@@ -338,8 +383,8 @@ class HFileCreator(FileCreator):
 #---------------------------------------------------------------------------
 
 class JavaFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(JavaFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(JavaFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		header_title = self.header_title
@@ -360,8 +405,8 @@ public class {0} {{
 #---------------------------------------------------------------------------
 
 class GoFileCreator(FileCreator):
-	def __init__(self, header_title):
-		super(GoFileCreator, self).__init__(header_title)
+	def __init__(self, options):
+		super(GoFileCreator, self).__init__(options)
 
 	def print_header(self, new_file):
 		header_title = self.header_title
