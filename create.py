@@ -137,12 +137,31 @@ class JavascriptFileCreator(FileCreator):
 		print >> new_file, create_header('//', header_title)
 
 	def print_footer(self, new_file):
-		print >> new_file, '''
-//--------------------------------------------------------------------------
-// exports
 
-module.exports = {
-};'''
+		if new_file.name == 'main.js':
+			print >> new_file, '''
+require.config({
+  paths: {
+    'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min',
+    'handlebars': 'http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min'
+  },
+
+  shim: {
+    'handlebars': {
+      exports: 'Handlebars'
+    }
+  }
+});
+
+require(['jquery', 'handlebars'], function main($, Handlebars) {
+  $(document).ready(function () {
+    alert('TODO: implement main.js');
+  });
+});'''
+		else:
+			print >> new_file, '''
+define(['jquery'], function ($) {
+});'''
 
 #---------------------------------------------------------------------------
 
@@ -273,16 +292,9 @@ class HtmlFileCreator(FileCreator):
   <!-- stylesheets -->
   <link rel="stylesheet" type="text/css" href="style.css">
 
-  <!-- jQuery -->
-  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-
   <!-- javascript -->
+  <script data-main="src/main" src="http://requirejs.org/docs/release/2.1.9/comments/require.js"></script>
 
-  <!-- start script -->
-  <script>
-    $(document).ready(function () {
-      alert('You still need to implement the start script!');
-    });
   </script>
 </head>
 
