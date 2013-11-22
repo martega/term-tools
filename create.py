@@ -143,7 +143,9 @@ class JavascriptFileCreator(FileCreator):
 require.config({
   paths: {
     'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min',
-    'handlebars': 'http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min'
+    'handlebars': 'http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min',
+    'text': '../bower_components/requirejs-text/text',
+    'hbs': '../bower_components/requirejs-hbs/hbs'
   },
 
   shim: {
@@ -153,7 +155,7 @@ require.config({
   }
 });
 
-require(['jquery', 'handlebars'], function main($, Handlebars) {
+require(['jquery'], function main($) {
   $(document).ready(function () {
     alert('TODO: implement main.js');
   });
@@ -289,8 +291,13 @@ class HtmlFileCreator(FileCreator):
 <head>
   <title></title>
 
-  <!-- stylesheets -->
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- css -->
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0px;
+    }
+  </style>
 
   <!-- javascript -->
   <script data-main="src/main" src="http://requirejs.org/docs/release/2.1.9/comments/require.js"></script>
