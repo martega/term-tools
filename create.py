@@ -175,7 +175,7 @@ class JsonFileCreator(FileCreator):
 	def print_footer(self, new_file):
 		project = os.getcwd().split('/')[-1]
 		print >> new_file, '''{{
-  "create": "{0}",
+  "name": "{0}",
   "version": "0.0.0",
   "authors": [
     "Martin Ortega <martega6@gmail.com>"
