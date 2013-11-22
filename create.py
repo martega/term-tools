@@ -143,8 +143,8 @@ class JavascriptFileCreator(FileCreator):
 			print >> new_file, '''
 require.config({
   paths: {
-    'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min',
-    'handlebars': 'http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min',
+    'jquery': '../bower_components/jquery/jquery',
+    'handlebars': '../bower_components/handlebars/handlebars',
     'text': '../bower_components/requirejs-text/text',
     'hbs': '../bower_components/requirejs-hbs/hbs'
   },
@@ -156,9 +156,16 @@ require.config({
   }
 });
 
-require(['jquery'], function main($) {
+require(['jquery', 'handlebars'], function main($, Handlebars) {
   $(document).ready(function () {
-    alert('TODO: implement main.js');
+    var name = prompt("What's your name?")
+      , template = Handlebars.compile('<h1>Hello, {{name}}!</h1>');
+
+    if (name === '') {
+      name = 'World';
+    }
+
+    $('body').append(template({ name: name }));
   });
 });'''
 		else:
