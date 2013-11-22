@@ -53,6 +53,7 @@ def create_file_creator(options, file_name):
 		'ruby'      : RubyFileCreator,
 		'js'        : JavascriptFileCreator,
 		'javascript': JavascriptFileCreator,
+		'json'      : JsonFileCreator,
 		'erl'       : ErlangFileCreator,
 		'erlang'    : ErlangFileCreator,
 		'Makefile'  : MakefileFileCreator,
@@ -164,6 +165,29 @@ require(['jquery'], function main($) {
 			print >> new_file, '''
 define(['jquery'], function ($) {
 });'''
+
+#---------------------------------------------------------------------------
+
+class JsonFileCreator(FileCreator):
+	def __init__(self, options):
+		super(JsonFileCreator, self).__init__(options)
+
+	def print_footer(self, new_file):
+		project = os.getcwd().split('/')[-1]
+		print >> new_file, '''{{
+  "butt": "{0}",
+  "version": "0.0.0",
+  "authors": [
+    "Martin Ortega <martega6@gmail.com>"
+  ],
+  "dependencies": {{
+    "requirejs-text": "~2.0.10",
+    "requirejs-hbs": "*",
+    "handlebars": "~1.1.2",
+    "jquery": "~2.0.3",
+    "requirejs": "~2.1.9"
+  }}
+}}'''.format(project)
 
 #---------------------------------------------------------------------------
 
