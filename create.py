@@ -331,7 +331,7 @@ class HtmlFileCreator(FileCreator):
   </style>
 
   <!-- javascript -->
-  <script data-main="src/main" src="http://requirejs.org/docs/release/2.1.9/comments/require.js"></script>
+  <script data-main="src/main" src="bower_components/requirejs/require.js"></script>
 
   </script>
 </head>
