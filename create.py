@@ -362,8 +362,8 @@ class HtmlFileCreator(FileCreator):
 
 </html>'''
 		else:
-			component_name = new_file.name.replace('_', '-').split('.')[0]
-			print >> new_file, '''<div class={0}>
+			component_name = os.getcwd().split('/')[-1].replace('_', '-')
+			print >> new_file, '''<div class="{0}">
 </div>'''.format(component_name)
 
 #---------------------------------------------------------------------------
@@ -373,9 +373,9 @@ class CssFileCreator(FileCreator):
 		super(CssFileCreator, self).__init__(options)
 
 	def print_body(self, new_file):
-		component_name = new_file.name.replace('_', '-').split('.')[0]
-		print >> new_file, '''.{0} {
-}'''.format(component_name)
+		component_name = os.getcwd().split('/')[-1].replace('_', '-')
+		print >> new_file, '''.{0} {{
+}}'''.format(component_name)
 
 #---------------------------------------------------------------------------
 
