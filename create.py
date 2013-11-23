@@ -159,8 +159,8 @@ require.config({
 require([
   'jquery',
   'handlebars'
-], function main($, Handlebars)
-{
+], function main($, Handlebars) {
+
   $(document).ready(function () {
     var name = prompt("What's your name?")
       , template = Handlebars.compile('<h1>Hello, {{name}}!</h1>');
@@ -171,6 +171,7 @@ require([
 
     $('body').append(template({ name: name }));
   });
+
 });'''
 		else:
 			folder = os.getcwd().split('/')[-1]
@@ -178,10 +179,10 @@ require([
 			print >> new_file, '''
 define([
   'jquery',
-  '!text/{0}/layout.html',
-  '!text/{0}/style.css'
-], function ($, layout, style)
-{{
+  'text!{0}/layout.html',
+  'text!{0}/style.css'
+], function ($, layout, style) {{
+
   function {1}() {{
     $.extend(this, $('<div>'));
     this.append(
