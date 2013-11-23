@@ -156,7 +156,11 @@ require.config({
   }
 });
 
-require(['jquery', 'handlebars'], function main($, Handlebars) {
+require([
+  'jquery',
+  'handlebars'
+], function main($, Handlebars)
+{
   $(document).ready(function () {
     var name = prompt("What's your name?")
       , template = Handlebars.compile('<h1>Hello, {{name}}!</h1>');
@@ -169,9 +173,25 @@ require(['jquery', 'handlebars'], function main($, Handlebars) {
   });
 });'''
 		else:
+			folder = os.getcwd().split('/')[-1]
+			component = folder.replace('_', ' ').title().replace(' ', '')
 			print >> new_file, '''
-define(['jquery'], function ($) {
-});'''
+define([
+  'jquery',
+  '!text/{0}/layout.html',
+  '!text/{0}/style.css'
+], function ($, layout, style)
+{{
+  function {1}() {{
+    $.extend(this, $('<div>'));
+    this.append(
+      $('<style>' + style + '</style>'),
+      $(layout)
+    );
+  }}
+
+  return {1}
+}});'''.format(folder, component)
 
 #---------------------------------------------------------------------------
 
@@ -316,7 +336,8 @@ class HtmlFileCreator(FileCreator):
 		super(HtmlFileCreator, self).__init__(options)
 
 	def print_body(self, new_file):
-		print >> new_file, '''<!DOCTYPE html>
+		if new_file.name == 'index.html':
+			print >> new_file, '''<!DOCTYPE html>
 <html>
 
 <head>
@@ -339,8 +360,11 @@ class HtmlFileCreator(FileCreator):
 <body>
 </body>
 
-</html>
-'''
+</html>'''
+		else:
+			component_name = new_file.name.replace('_', '-').split('.')[0]
+			print >> new_file, '''<div class={0}>
+</div>'''.format(component_name)
 
 #---------------------------------------------------------------------------
 
@@ -348,47 +372,10 @@ class CssFileCreator(FileCreator):
 	def __init__(self, options):
 		super(CssFileCreator, self).__init__(options)
 
-	def print_header(self, new_file):
-		print >> new_file, '''/*
-* {0}
-*/
-'''.format(self.header_title)
-
 	def print_body(self, new_file):
-		print >> new_file, '''
-* {
-	margin  : 0;
-	padding : 0;
-	box-sizing      : border-box;
-	-moz-box-sizing : border-box;
-}
-
-h1, h2, h3, h4, h5, h6, p {
-	margin-bottom: 10px;
-}
-
-ol, ul, dl {
-	list-style-position: inside;
-}
-
-body {
-	font  : 13px 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
-	color : #444;
-	background-color : #888;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:link, a:visited {
-	color: inherit;
-}
-
-strong {
-	font-weight : 800;
-	color       : #000;
-}'''
+		component_name = new_file.name.replace('_', '-').split('.')[0]
+		print >> new_file, '''.{0} {
+}'''.format(component_name)
 
 #---------------------------------------------------------------------------
 
