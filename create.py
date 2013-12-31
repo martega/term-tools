@@ -135,10 +135,12 @@ class JavascriptFileCreator(FileCreator):
 		if new_file.name == 'index.js':
 			module = os.getcwd().split('/')[-1]
 			header_title = 'index.js for the {0} module'.format(module)
+		elif new_file.name == 'Gruntfile.js':
+			project = os.getcwd().split('/')[-1]
+			header_title = 'Gruntfile.js for the {0} project'.format(project)
 		print >> new_file, create_header('//', header_title)
 
 	def print_footer(self, new_file):
-
 		if new_file.name == 'main.js':
 			print >> new_file, '''
 require.config({
@@ -173,6 +175,13 @@ require([
   });
 
 });'''
+		elif new_file.name == 'Gruntfile.js':
+			print >> new_file, '''
+module.exports = function (grunt) {
+
+  // Project specific configuration in here.
+
+};'''
 		else:
 			folder = os.getcwd().split('/')[-1]
 			component = folder.replace('_', ' ').title().replace(' ', '')
