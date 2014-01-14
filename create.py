@@ -180,6 +180,12 @@ require([
 module.exports = function (grunt) {
 
   // Project specific configuration in here.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json')
+  });
+
+  // Load plugins that were installed via NPM
+  grunt.loadNpmTasks('grunt-contrib-');
 
 };'''
 		else:
